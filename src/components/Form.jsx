@@ -3,15 +3,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 import "../public/Form.css";
-
-import { FEEDBACK_URL, TWILIO_URL, CLOUD_NAME, UPLOAD_PRESET } from "../config";
 import StarRating from "./StarRating";
 import ImageInput from "./ImageInput";
 
 function Form() {
-  const cloud_name = CLOUD_NAME;
-  const upload_preset = UPLOAD_PRESET;
-
+  
+  const cloud_name = import.meta.env.VITE_CLOUD_NAME;
+  const upload_preset = import.meta.env.VITE_UPLOAD_PRESET;
+  
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     rating: 0,
@@ -65,7 +64,7 @@ function Form() {
       setImageUrl(data.secure_url);
     }
 
-    const res = await fetch( FEEDBACK_URL, {
+    const res = await fetch( import.meta.env.VITE_FEEDBACK_URL, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +84,7 @@ function Form() {
 
     const json = await res.json();
 
-    const resp = await fetch(TWILIO_URL, {
+    const resp = await fetch(import.meta.env.VITE_TWILIO_URL, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
