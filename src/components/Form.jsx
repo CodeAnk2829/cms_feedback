@@ -4,12 +4,14 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 import "../public/Form.css";
 
+import { FEEDBACK_URL, TWILIO_URL, CLOUD_NAME, UPLOAD_PRESET } from "../config";
 import StarRating from "./StarRating";
 import ImageInput from "./ImageInput";
 
 function Form() {
-  const cloud_name = "dlpwpipf8";
-  const upload_preset = "pultzcty";
+  const cloud_name = CLOUD_NAME;
+  const upload_preset = UPLOAD_PRESET;
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     rating: 0,
@@ -26,7 +28,6 @@ function Form() {
   const searchParams = new URLSearchParams(location.search);
   // Getting the value of a query parameter named 'id'
   const id = searchParams.get("id");
-  console.log(id);
 
   useEffect(
     function () {
@@ -44,14 +45,7 @@ function Form() {
     e.preventDefault();
     setLoading(true);
 
-    console.log(formData);
-    console.log(formData.message);
-
-    console.log("this is selectedFile");
-    console.log(selectedFile);
-
     if (imageData) {
-      console.log("Image uploading ......");
       const image = new FormData();
       image.append("file", imageData);
       image.append("cloud_name", cloud_name);
@@ -71,9 +65,7 @@ function Form() {
       setImageUrl(data.secure_url);
     }
 
-    const res = await fetch(
-      `https://backend.ankitkumar143872.workers.dev/api/v1/feedback`,
-      {
+    const res = await fetch( FEEDBACK_URL, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -88,15 +80,12 @@ function Form() {
     );
 
     if (!res.ok) {
-      console.log("response bad");
       throw new Error("response is not ok");
     }
 
     const json = await res.json();
-    console.log("this is json response");
-    console.log(json);
 
-    const resp = await fetch("https://twilio-sms-d8db.onrender.com/notify", {
+    const resp = await fetch(TWILIO_URL, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -110,14 +99,11 @@ function Form() {
       throw new Error("Something went wrong");
     }
     const info = await resp.json();
-    console.log(info);
+
     setLoading(false);
     navigate("/submitted");
   };
 
-  // problem with qr: if we would have set the query string for fetching the washroomId as id then anybody can change the query string in the url
-  // and there is not point of using specific qrs for the specific washrooms
-  // hence find the solution
 
   return (
     <div>
