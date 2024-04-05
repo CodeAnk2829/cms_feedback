@@ -1,0 +1,21 @@
+/* Form.css */
+
+.backdrop {
+    z-index: 9999;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.MuiCircularProgress-root {
+    color: #346ad5;
+    /* Color of the spinner */
+}
