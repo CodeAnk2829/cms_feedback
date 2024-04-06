@@ -63,7 +63,7 @@ function Form() {
       }
       setImageUrl(data.secure_url);
     }
-
+    alert(imageUrl);
     const res = await fetch( import.meta.env.VITE_FEEDBACK_URL, {
         method: "post",
         headers: {
