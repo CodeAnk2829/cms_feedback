@@ -1,7 +1,8 @@
 export default function ThanksPage() {
   return (
-    <div className="container">
-      <div className="thanks-container">Thank You for your feedback.</div>
+    <div className="thanks-container">
+      <div className="thanks-container-child-1">Thank You</div>
+      <div className="thanks-container-child-2">For Your Feedback</div>
     </div>
   );
 }

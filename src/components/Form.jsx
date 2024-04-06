@@ -5,12 +5,12 @@ import Backdrop from "@mui/material/Backdrop";
 import "../public/Form.css";
 import StarRating from "./StarRating";
 import ImageInput from "./ImageInput";
+import Error from "./Error";
 
 function Form() {
-  
   const cloud_name = import.meta.env.VITE_CLOUD_NAME;
   const upload_preset = import.meta.env.VITE_UPLOAD_PRESET;
-  
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     rating: 0,
@@ -19,7 +19,7 @@ function Form() {
   const [rating, setRating] = useState(5);
   const [selectedFile, setSelectedFile] = useState([]);
   const [imageData, setImageData] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
+  let imageUrl = "";
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -27,6 +27,9 @@ function Form() {
   const searchParams = new URLSearchParams(location.search);
   // Getting the value of a query parameter named 'id'
   const id = searchParams.get("id");
+  if (!id) {
+    return <Error />;
+  }
 
   useEffect(
     function () {
@@ -61,22 +64,21 @@ function Form() {
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
-      setImageUrl(data.secure_url);
+      imageUrl = data.secure_url;
     }
-    alert(imageUrl);
-    const res = await fetch( import.meta.env.VITE_FEEDBACK_URL, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          rating: formData.rating,
-          washroomId: id,
-          comment: formData.message,
-          imageUrl,
-        }),
-      }
-    );
+
+    const res = await fetch(import.meta.env.VITE_FEEDBACK_URL, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        rating: formData.rating,
+        washroomId: id,
+        comment: formData.message,
+        imageUrl,
+      }),
+    });
 
     if (!res.ok) {
       throw new Error("response is not ok");
@@ -102,7 +104,6 @@ function Form() {
     setLoading(false);
     navigate("/submitted");
   };
-
 
   return (
     <div>
